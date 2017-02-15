@@ -34,7 +34,7 @@ char data = 0;                //Variable for storing received data
 
 void setup()
   {
-    Serial.begin(9600);   //Sets the baud for serial data transmission                               
+   Serial.begin(9600);   //Sets the baud for serial data transmission                               
     int i;                // Setup motors
     for(i = 0; i < 2; i++)
     {
@@ -71,11 +71,11 @@ void drive_forward()
 { 
   s4 = analogRead(sp4);
   s5 = analogRead(sp5);
- check_sensor(s4,s5);
+ //check_ground_sensor(s4,s5);
  
   s0 = analogRead(sp0);
   Serial.println(s0);
-  if(s0>t)
+  //if(s0>t)
   {
   digitalWrite(motor_left[0], HIGH); 
   digitalWrite(motor_left[1], LOW); 
@@ -83,9 +83,9 @@ void drive_forward()
   digitalWrite(motor_right[0], HIGH); 
   digitalWrite(motor_right[1], LOW); 
   }
-  else
+  //else
   {
-  motor_stop();
+  //motor_stop();
   digitalWrite(ledpin, LOW);
   }
 }
@@ -94,10 +94,10 @@ void drive_backward()
 {  
   s4 = analogRead(sp4);
   s5 = analogRead(sp5);
-  check_sensor(s4,s5);
+  //check_ground_sensor(s4,s5);
   
   s2 = analogRead(sp2);
-  if(s2>t)
+  //if(s2>t)
   {
     digitalWrite(motor_left[0], LOW); 
     digitalWrite(motor_left[1], HIGH); 
@@ -105,15 +105,16 @@ void drive_backward()
     digitalWrite(motor_right[0], LOW); 
     digitalWrite(motor_right[1], HIGH); 
   }
- else{
+ //else
+ {
    digitalWrite(ledpin, LOW);
-  motor_stop();
+  //motor_stop();
   }
 }
 
 void turn_left(){
   s1 = analogRead(sp1);
-  if(s1>t)
+  //if(s1>t)
   {
     digitalWrite(motor_left[0], LOW); 
     digitalWrite(motor_left[1], HIGH); 
@@ -121,17 +122,17 @@ void turn_left(){
     digitalWrite(motor_right[0], HIGH); 
     digitalWrite(motor_right[1], LOW);
   }
-    else 
+    //else 
  {
   digitalWrite(ledpin, LOW);
-  motor_stop();
+  //motor_stop();
  }
 }
 
 void turn_right()
 {
   s3 = analogRead(sp3);
-  if(s3>t)
+  //if(s3>t)
   {
     digitalWrite(motor_left[0], HIGH); 
     digitalWrite(motor_left[1], LOW); 
@@ -139,12 +140,12 @@ void turn_right()
     digitalWrite(motor_right[0], LOW); 
     digitalWrite(motor_right[1], HIGH); 
   }
-   else
+   //else
  {
    digitalWrite(ledpin, LOW);
-    motor_stop();
+    //motor_stop();
  }
-
+}
 void servo_happy(){
    for (pos = 0; pos <= 90; pos += 1) 
      {                                         // goes from 0 degrees to 180 degrees in steps of 1 degree
@@ -202,14 +203,14 @@ void loop()
      case 'l':
                turn_left();
                //delay(1000);
-               motor_stop();
+               //motor_stop();
                //Serial.println("3");
                break;
               
       case 'r':
                turn_right();
                //delay(1000);
-               motor_stop();
+               //motor_stop();
                //Serial.println("4");
                break;
 
@@ -229,9 +230,9 @@ void loop()
                
       case 's':
                drive_backward();
-                //servo_sad();
+               //servo_sad();
                //delay(1000);
-               motor_stop();
+              // motor_stop();
                Serial.println("sad");
                break;   
                 
@@ -239,7 +240,7 @@ void loop()
                drive_backward();
                servo_angry();
                //delay(1000);
-               motor_stop();
+              // motor_stop();
                Serial.println("angry");
                break;    
    
@@ -248,7 +249,7 @@ void loop()
             //delay(1000);
         
           //  Serial.println("default");        
-      }
+      
    }
  }
-
+}
