@@ -1,11 +1,12 @@
 /* 
 * Bluetooh Basic: LED ON OFF - Avishkar
-* Coder - VIDHI & SUVEENO
+* Coder - VIDHI & SUVEENA
 * Website - http://bit.do/Avishkar
 * Download the App : https://github.com/Mayoogh/Arduino-Bluetooth-Basic
 * This program lets you to control a LED on pin 13 of arduino using a bluetooth module
 */
 #include <Servo.h>
+#include<math.h> 
 
 Servo myservo1;   
 
@@ -17,7 +18,7 @@ int sp2 = A2;
 int sp3 = A3;
 int sp4 = A4;
 int sp5 = A5;
-int sp6 = A6;                  // select the input pin for the potentiometer
+//int sp6 = A6;                  // select the input pin for the potentiometer
 int s0 = 0;
 int s1 = 0;
 int s2 = 0;
@@ -33,6 +34,7 @@ char data = 0;
 //int pos = 0;//Variable for storing received data
 int neg = 0;
 int voltage;
+int voltage_1;
 
 
 
@@ -76,7 +78,6 @@ void motor_stop()
 void drive_forward()
 { 
   s0 = analogRead(sp0);
-  Serial.println(s0);
   if(s0>t)
   {
      
@@ -88,9 +89,11 @@ void drive_forward()
   digitalWrite(motor_right[1], HIGH); 
   delay(500);
   motor_stop();
+
   }
   else
   {
+      Serial.write("o");
   motor_stop();
  // digitalWrite(ledpin, LOW);
   }
@@ -99,7 +102,8 @@ void drive_forward()
 void drive_backward()
 {  
    s2 = analogRead(sp2);
-    Serial.println(s2);
+   //Serial.println(s2);
+    
   if(s2>t)
   {
   
@@ -110,13 +114,14 @@ void drive_backward()
     digitalWrite(ledpin, HIGH);
     digitalWrite(motor_right[0], HIGH); 
      digitalWrite(motor_right[1], LOW);
-    delay(500);
+    delay(800);
     motor_stop(); 
   }
   else
   {
 // digitalWrite(ledpin, LOW);
   motor_stop();
+  Serial.write("o");
   }
 }
 
@@ -128,7 +133,19 @@ void turn_left(){
     digitalWrite(ledpin, HIGH);
     digitalWrite(motor_right[0], HIGH); 
     digitalWrite(motor_right[1], LOW);
-    delay(500); 
+    delay(500);                 
+    motor_stop();
+ 
+}
+void spin_left(){
+   
+    check_ground_sensor();
+    digitalWrite(motor_left[0], LOW); 
+    digitalWrite(motor_left[1], HIGH); 
+    digitalWrite(ledpin, HIGH);
+    digitalWrite(motor_right[0], HIGH); 
+    digitalWrite(motor_right[1], LOW);
+    delay(1500);                 
     motor_stop();
  
 }
@@ -142,13 +159,24 @@ void turn_right()
     digitalWrite(ledpin, HIGH);
     digitalWrite(motor_right[0], LOW); 
     digitalWrite(motor_right[1], HIGH); 
-    delay(500);
+    delay(400);                          
     motor_stop();
 }
-
+void spin_right()
+{
+   
+    check_ground_sensor();
+    digitalWrite(motor_left[0], HIGH); 
+    digitalWrite(motor_left[1], LOW); 
+    digitalWrite(ledpin, HIGH);
+    digitalWrite(motor_right[0], LOW); 
+    digitalWrite(motor_right[1], HIGH); 
+    delay(1300);                          
+    motor_stop();
+}
 void servo_happy()
   {
-    drive_forward();
+    //drive_forward();
     for (neg=90,pos = 90; pos <= 180, neg>= 0; pos += 1,neg -= 1) 
      {                                         // goes from 0 degrees to 180 degrees in steps of 1 degree
       myservo1.write(pos);
@@ -166,7 +194,7 @@ void servo_happy()
   
 void servo_angry()
   {
-    drive_backward();
+   // drive_backward();
    for (neg=90,pos = 90; pos <= 180, neg>= 0; pos += 1,neg -= 1)   
     {                                           // goes from 0 degrees to 180 degrees in steps of 1 degree
       myservo1.write(pos);
@@ -195,16 +223,19 @@ void loop()
      switch(data)
      {
       case 'f':
-               drive_forward(); 
+               drive_forward();
+                
               // motor_stop();
                //Serial.println("1");
+               Serial.write("e");
                 break;
               
       case 'b':
                 drive_backward();
                // delay(1000);
                 //motor_stop();
-                //Serial.println("2");
+               // Serial.println("2");
+                Serial.write("e");
                 break;
               
      case 'r':
@@ -212,14 +243,14 @@ void loop()
                //delay(1000);
                motor_stop();
                //Serial.println("3");
+               Serial.write("e");
                break;
 
       case 'A':
-               turn_left();
-               turn_left();
-               turn_left();
+               spin_right();
                //delay(1000);
                motor_stop();
+               Serial.write("e");
                //Serial.println("3");
                break;
                        
@@ -228,37 +259,41 @@ void loop()
                turn_right();
                //delay(1000);
                motor_stop();
+               Serial.write("e");
                //Serial.println("4");
                break;
 
      case 'C':
-               turn_right();
-               turn_right();
-               turn_right();
+               spin_left();
+               
                //delay(1000);
                motor_stop();
+               Serial.write("e");
                //Serial.println("4");
                break;          
 
      case 't':
                 motor_stop();
-                Serial.println("stopped");
+                //Serial.println("stopped");
+                Serial.write("e");
                 break;
 
-      case 'o':
+      case 'o':                   //hello
                drive_forward();
                drive_backward();
                servo_happy();
                //delay(1000);
                motor_stop();
-               Serial.println("happy");
+              // Serial.println("happy");
+               Serial.write("e");
                break;
 
-      case 'h':
+      case 'h':                 //happy
                servo_happy();
                //delay(1000);
                motor_stop();
-               Serial.println("happy");
+              // Serial.println("happy");
+               Serial.write("e");
                break;
 
       case 'd':
@@ -266,22 +301,30 @@ void loop()
                drive_backward();
                turn_right();
                turn_left();
-               servo_happy();
+               turn_left();
+               turn_right();
+               servo_angry();
                drive_forward();
                drive_backward();
                turn_left();
                turn_right();
+               turn_right();
+               turn_left();
+               servo_angry();
+            
                //delay(1000);
                motor_stop();
-               Serial.println("dance");
+               //Serial.println("dance");
+               Serial.write("e");
                break;
                
       case 's':
                drive_backward();
-                //servo_sad();
+                servo_happy();
                //delay(1000);
                motor_stop();
-               Serial.println("sad");
+               //Serial.println("sad");
+               Serial.write("e");
                break;   
                 
     case 'a':
@@ -289,7 +332,8 @@ void loop()
                servo_angry();
                //delay(1000);
                motor_stop();
-               Serial.println("angry");
+               //Serial.println("angry");
+               Serial.write("e");
                break;    
    
     default:
@@ -301,15 +345,17 @@ void loop()
 
    }
 
-/*
-    voltage=analogRead(A0);
-     float voltage = voltage * (5.0 / 1023.0);
-     Serial.println(voltage);
-   if(voltage <= 3.5)
+  
+     voltage=analogRead(A6);
+     float voltage_1 = voltage * (7.5 / 1023.0);
+    // Serial.println(voltage);
+     
+   if(voltage_1 <= 3.5)
    {
+   
     Serial.write("v");
-     Serial.println("v");
+    
     }
-    */
+    
  }
 
